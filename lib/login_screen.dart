@@ -1,4 +1,5 @@
 import 'package:ff_setup_to_flutter/home_page.dart';
+import 'package:ff_setup_to_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,7 +20,17 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  bool _passwordVisible = false;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  OutlineInputBorder emailFieldErrorBorder = OutlineInputBorder(
+    borderSide: const BorderSide(
+      color: Colors.red, // Alterado para vermelho
+      width: 2,
+    ),
+    borderRadius: BorderRadius.circular(8),
+  );
 
   @override
   void initState() {
@@ -86,7 +97,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                   ),
                   Container(
                     width: MediaQuery.sizeOf(context).width,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
@@ -106,7 +117,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                        Padding(
-                        padding:  EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0),
+                        padding:  const EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -129,7 +140,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                   ),
                               ),
                               child: IconButton(
-                                icon: FaIcon(
+                                icon: const FaIcon(
                                   FontAwesomeIcons.lock,
                                   color: Color(0xFF57636C),
                                   size: 34,
@@ -143,10 +154,10 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
 
                     // EMAIL TEXT BOX
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
                               child: TextFormField(
@@ -155,69 +166,67 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                 decoration: InputDecoration(
                                   labelText: 'Email Address',
                                   labelStyle: const TextStyle(
-                                          fontFamily: 'Outfit',
-                                          color: Color(0xFF57636C),
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                        hintText: 'Enter your email here...',
-                                    hintStyle: const TextStyle(
-                                          fontFamily: 'Outfit',
-                                          color: Color(0xFF57636C),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                            color: Colors.grey,
-                                            width: 1,
-                                          ),
-                                           borderRadius: BorderRadius.circular(8),
-                                        ),
-
-                                        focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
+                                    fontFamily: 'Outfit',
+                                    color: Color(0xFF57636C),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  hintText: 'Enter your email here...',
+                                  hintStyle: const TextStyle(
+                                    fontFamily: 'Outfit',
+                                    color: Color(0xFF57636C),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey,
+                                      width: 1,
                                     ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey,
+                                      width: 1,
                                     ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.red, // Alterado para vermelho
+                                      width: 2,
                                     ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    contentPadding:
-                                      const EdgeInsetsDirectional.fromSTEB(
-                                            16, 24, 0, 24),),
-                                style: const TextStyle(
-                                        fontFamily: 'Outfit',
-                                        color: Color(0xFF0F1113),
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                       maxLines: null,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.red, // Alterado para vermelho
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                                    16, 24, 0, 24),
+                                  ),
+                                  style: const TextStyle(
+                                    fontFamily: 'Outfit',
+                                    color: Color(0xFF0F1113),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  maxLines: null,
+                                ),
                               ),
-                              ),
-                          ],
-                        ),
+                            ],
+                          ),
                         ),
 
                     // PASSWORD TEXTBOX
-
                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -225,159 +234,174 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                             Expanded(
                               child: TextFormField(
                                 controller: passwordController,
-                                obscureText: false,
+                                obscureText: !_passwordVisible,
                                 decoration: InputDecoration(
                                   labelText: 'Password',
                                   labelStyle: const TextStyle(
-                                          fontFamily: 'Outfit',
-                                          color: Color(0xFF57636C),
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                        hintText: 'Enter your password here...',
-                                    hintStyle: const TextStyle(
-                                          fontFamily: 'Outfit',
-                                          color: Color(0xFF57636C),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                        color: Color(0xFFF1F4F8),
-                                        width: 2,
-                                          ),
-                                           borderRadius: BorderRadius.circular(8),
-                                        ),
-
-                                        focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Colors.grey,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
+                                    fontFamily: 'Outfit',
+                                    color: Color(0xFF57636C),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  hintText: 'Enter your password here...',
+                                  hintStyle: const TextStyle(
+                                    fontFamily: 'Outfit',
+                                    color: Color(0xFF57636C),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0xFFF1F4F8),
+                                      width: 2,
                                     ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey,
+                                      width: 1,
                                     ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 2,
                                     ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    contentPadding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            16, 24, 0, 24),
-                                        
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 24, 0, 24),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                      color: Color(0xFF57636C),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _passwordVisible = !_passwordVisible;
+                                      });
+                                    },
+                                  ),
                                 ),
                                 style: const TextStyle(
-                                        fontFamily: 'Outfit',
-                                        color: Color(0xFF0F1113),
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                       maxLines: null,
+                                  fontFamily: 'Outfit',
+                                  color: Color(0xFF0F1113),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
                               ),
+
                               ),
                           ],
                         ),
-                        ),
+                      ),
                     
-                    Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(20, 12, 20, 16),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                 style: TextButton.styleFrom(
-                                textStyle: const TextStyle(fontSize: 20,),
-                                primary: Color.fromARGB(255, 23, 23, 23),
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(20, 12, 20, 16),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                                style: TextButton.styleFrom(
+                              textStyle: const TextStyle(fontSize: 16,),
+                              foregroundColor: Color.fromARGB(255, 23, 23, 23),
+                            ),
+                              onPressed: () {},
+                            child:  const Text('Forgot Password?'),
+                            ),                              
+                            ElevatedButton(
+                              style: 
+                              ElevatedButton.styleFrom(
+                                minimumSize: const Size(130, 40),
+                                backgroundColor: Colors.teal
                               ),
-                                onPressed: () {},
-                              child:  const Text('Forgot Password?'),),
                               
-                              ElevatedButton(
-                                style: 
-                                ElevatedButton.styleFrom(
-                                  minimumSize: Size(130, 40),
-                                  backgroundColor: Colors.teal
-                                ),                                  
-                                onPressed: () async {
-                                  String email = emailController.text;
-                                  String password = passwordController.text;                                
+                              
+                              onPressed: () async {
+                                String email = emailController.text;
+                                String password = passwordController.text;
 
-                                  var result = await apiService.login(email, password);
-                                  if (result['status'] == "Success") {
+                                var result = await apiService.login(email, password);
 
-                                    Provider.of<HomeModel>(context, listen: false).setUserData(
-                                      result['fullName'],
-                                      result['userId'].toString(),
-                                    );
-                                    // Mostrar um alerta de sucesso com o nome e ID do usuário
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text("Login Successfully",
-                                            style: GoogleFonts.outfit(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.w500
-                                            ),
+                                if (result['status'] == "Success") {
+                                  Provider.of<HomeModel>(context, listen: false).setUserData(
+                                    result['fullName'],
+                                    result['userId'].toString(),
+                                  );
+
+                                  // Mostrar um alerta de sucesso com o nome e ID do usuário
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          "Login Successfully",
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                          content: Text("Welcome ${result['fullName']} to AGRISmart Pro App. Your ID is ${result['userId']}."),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text("OK"),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(
-                                                    builder: (context) => HomeWidget(), // Substitua HomeWidget() pelo nome correto da sua página inicial
-                                                  ),
-                                                );                                                
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  } else {
-                                    // Mostrar mensagem de erro com detalhes adicionais, se houver
-                                    String errorMessage = 'Falha no Login';
-                                    if (result.containsKey('message')) {
-                                      errorMessage += ': ${result['message']}';
-                                    }
+                                        ),
+                                        content: Text(
+                                          "Welcome ${result['fullName']} to AGRISmart Pro App. Your ID is ${result['userId']}.",
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text("OK"),
+                                            onPressed: () {
+                                              // Navigator.of(context).pop();
+                                              // Navigator.of(context).pushReplacement(
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) => HomeWidget(), // Substitua HomeWidget() pelo nome correto da sua página inicial
+                                              //   ),
+                                              // );
 
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(errorMessage)),
-                                    );
-                                  }
+                                              Navigator.of(context).pushReplacement(
+                                                MaterialPageRoute(builder: (context) => NavBarApp()), // Navega para NavBarApp
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  // Mostrar mensagem de erro com detalhes adicionais, se houver
+                                  String errorMessage = 'Login failed';
 
-                                }, 
-                                child: const Text('Login',
-                                style: TextStyle(fontSize: 18,
-                                color: Colors.white),
-                                )
-                                
-                              )
-                             
-                            ],
-                          ),
+                                  if (result['status'] == "Error") {
+                                    errorMessage = result['message'];
+                                  }                                  
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(errorMessage)),
+                                  );
+                                }
+                              },                              
+                                                                
+                              child: const Text('Login',
+                              style: TextStyle(fontSize: 18,
+                              color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
-
+                      ),
                     ],
                   ),
-                ),              
-               ]
+                ),
+               ],
               ),
             ),
           ),

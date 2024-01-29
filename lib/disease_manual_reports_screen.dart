@@ -172,6 +172,11 @@ class _ManualReportDiseasesScreenWidgetState
         descriptionController.clear();
         // Resetar outras variáveis, se necessário
 
+        setState(() {
+          selectedCrop = null;
+          selectedDisease = null;
+        });
+
         return {"success": true, "message": "Report created successfully!"};
       } else {
         return {"success": false, "message": "Unselected crop or disease."};
@@ -378,7 +383,7 @@ class _ManualReportDiseasesScreenWidgetState
                                     child: Text(crop['Name']),
                                   );
                                 }).toList(),
-                                hint: const Text('Choose the crop...'),
+                                hint: const Text('Choose a crop...'),
                                 isExpanded: true,
                                 underline: Container(
                                   height: 2,
@@ -390,9 +395,9 @@ class _ManualReportDiseasesScreenWidgetState
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                style: const TextStyle(
+                                style: GoogleFonts.outfit(
                                   fontSize: 18,
-                                  color: Colors.black,
+                                  color: Colors.black
                                 ),
                                 dropdownColor: Colors.white,
                               ),
@@ -425,7 +430,7 @@ class _ManualReportDiseasesScreenWidgetState
                                         'Name']), // Ajuste conforme a sua API
                                   );
                                 }).toList(),
-                                hint: const Text('Select the disease'),
+                                hint: const Text('Choose a disease...'),
                                 icon: const Icon(
                                   Icons.keyboard_arrow_down_rounded,
                                   color: Colors.grey,

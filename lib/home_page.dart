@@ -18,31 +18,31 @@ class HomeWidget extends StatefulWidget {
 
   @override
   State<HomeWidget> createState() => _HomeWidgetState();
-  
 }
 
 class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
-  
   late HomeModel _model;
   late TabController _tabController;
   late Future<List<DiseaseReport>> _reportsFuture;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-   @override
+  @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
 
+    Future<ReportsResponse?>? _reportsFuture;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         setState(() {
-          _reportsFuture = Provider.of<ApiService>(context, listen: false).getUserReports();
+          _reportsFuture =
+              Provider.of<ApiService>(context, listen: false).getUserReports();
         });
       }
     });
   }
-
 
   @override
   void dispose() {
@@ -50,9 +50,45 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  void _logout() async {
+    await ApiService().logout();
+
+    if (!mounted) return; // Verifica se o widget ainda está montado
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(const Duration(seconds: 2), () {
+          if (mounted) {
+            // Verifica novamente antes de fechar o diálogo
+            Navigator.of(context).pop();
+            Navigator.pushReplacementNamed(context, '/login');
+          }
+        });
+
+        return AlertDialog(
+          title: Text(
+            "Logout Successful",
+            textAlign: TextAlign.center,
+            style: GoogleFonts.outfit(fontSize: 20),
+          ),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  "You have been successfully logged out.",
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    
     final homeModel = Provider.of<HomeModel>(context);
 
     return GestureDetector(
@@ -64,7 +100,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 44, 16, 12),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 44, 16, 12),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -75,7 +111,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(40),
                       ),
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+                        padding: const EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(40),
                           child: Image.asset(
@@ -88,7 +124,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,16 +133,65 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                           Text(
                             homeModel.fullName,
                             style: GoogleFonts.outfit(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                                fontSize: 20, fontWeight: FontWeight.w500),
                           ),
                           Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 2, 0, 0),
                             child: Text(
                               'Team #673241-CB',
                               style: GoogleFonts.outfit(fontSize: 16),
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(110, 0, 0, 0),
+                      child: GestureDetector(
+                        onTap: () async {
+                          // await ApiService().logout();
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              // Programa para fechar a caixa de diálogo automaticamente após 2 segundos
+                              Future.delayed(const Duration(seconds: 2), () {
+                                if (mounted) {
+                                  // Verifica se o widget ainda está montado
+                                  Navigator.of(context)
+                                      .pop(); // Fecha a caixa de diálogo
+                                  Navigator.pushReplacementNamed(context,
+                                      '/login'); // Redireciona para a página de login
+                                }
+                              });
+
+                              return AlertDialog(
+                                title: Text(
+                                  "Logout Successful",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.outfit(fontSize: 20),
+                                ),
+                                content: const SingleChildScrollView(
+                                  child: ListBody(
+                                    children: <Widget>[
+                                      Text(
+                                        "You have been successfully logged out.",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: const FaIcon(
+                          FontAwesomeIcons.rightFromBracket,
+                          color: Color.fromARGB(255, 243, 54, 54),
+                          size: 28,
+                        ),
                       ),
                     ),
                   ],
@@ -116,8 +202,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 child: Text(
                   'Start an activity...',
                   style: GoogleFonts.outfit(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -454,7 +540,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                 child: Container(
                   width: double.infinity,
                   height: 400,
@@ -475,18 +561,17 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
                     child: Column(
                       children: [
                         Align(
                           alignment: const Alignment(0, 0),
                           child: TabBar(
                             isScrollable: true,
-                            labelColor: const Color.fromARGB(255, 10, 187, 166),
+                            labelColor: const Color(0xFF249689),
                             unselectedLabelColor: Colors.black,
                             unselectedLabelStyle: TextStyle(),
-                            indicatorColor:
-                                const Color.fromARGB(255, 10, 187, 166),
+                            indicatorColor: const Color(0xFF249689),
                             indicatorWeight: 2,
                             tabs: [
                               Tab(
@@ -525,19 +610,18 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                             controller: _tabController,
                           ),
                         ),
-
                         Expanded(
                           child: TabBarView(
                             controller: _tabController,
                             children: [
-                               buildDiseaseReportsTab(context), // Aba de relatórios de doenças
+                              buildDiseaseReportsTab(
+                                  context), // Aba de relatórios de doenças
                               Container(), // Substitua por conteúdo real para as outras abas
                               Container(), // Substitua por conteúdo real para as outras abas
                               Container(), // Substitua por conteúdo real para as outras abas
                             ],
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -551,53 +635,56 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }
 
   Widget buildDiseaseReportsTab(BuildContext context) {
-  return FutureBuilder<List<DiseaseReport>>(
-    future: Provider.of<ApiService>(context, listen: false).getUserReports(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      if (snapshot.hasError) {
-        print('Error loading reports: ${snapshot.error}');
-        return Center(child: Text("Error: ${snapshot.error.toString()}"));
-      }
+    return FutureBuilder<ReportsResponse>(
+      future: Provider.of<ApiService>(context, listen: false).getUserReports(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          print('Error loading reports: ${snapshot.error}');
+          return Center(child: Text("Error: ${snapshot.error.toString()}"));
+        }
 
-      if (!snapshot.hasData || snapshot.data!.isEmpty) {
-        return const Center(child: Text("No reports found"));
-      }
+        List<DiseaseReport>? reports = snapshot.data?.reports;
+        if (reports == null || reports.isEmpty) {
+          return const Center(
+              child: Text("No disease reports found for current user."));
+        }
 
-      List<DiseaseReport> reports = snapshot.data!;
-      return ListView.builder(
-        itemCount: reports.length,
-        itemBuilder: (context, index) {
-          DiseaseReport report = reports[index];
+        return Padding(
+          padding: const EdgeInsets.all(9.0),
+          child: ListView.builder(
+          itemCount: reports.length,
+          itemBuilder: (context, index) {
+            DiseaseReport report = reports[index];
 
-          // Formatando a data
-          String formattedDate = DateFormat('EEE, MMM d, yyyy - h:mm a').format(report.createdAt);
+            // Formatando a data
+            String formattedDate = DateFormat('EEE, MMM d, yyyy - h:mm a')
+                .format(report.createdAt);
 
-          return Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
-            child: Container(
-              width: double.infinity,
+            return Container(              
+              width: 20,
+              margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 214, 212, 212), // Cor da borda
                   width: 2,
                 ),
-              ),
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white
+              ),              
               child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,                  
                   children: [
                     Text(
                       report.code, // Nome do report
                       style: GoogleFonts.outfit(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 21,
+                        fontWeight: FontWeight.w500
                       ),
                     ),
                     Padding(
@@ -605,21 +692,23 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       child: Text(
                         report.description,
                         style: GoogleFonts.outfit(
-                          fontSize: 18,
-                          color: Colors.grey[700],
-                        ),
+                        fontSize: 17,
+                        color: const Color.fromARGB(255, 114, 113, 113),
+                        fontWeight: FontWeight.w500
+                      ),
                       ),
                     ),
-                    Divider(
-                      height: 24,
+                    const Divider(
+                      height: 22,
                       thickness: 1,
-                      color: Colors.grey[300],
+                      color: Color.fromARGB(255, 195, 193, 193),
                     ),
                     Text(
                       "$formattedDate",
                       style: GoogleFonts.outfit(
                         fontSize: 16,
-                        color: const Color.fromARGB(255, 10, 187, 166),
+                        color: const Color(0xFF249689),
+                        fontWeight: FontWeight.w500
                       ),
                     ),
                     Align(
@@ -629,16 +718,19 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                           // Ação ao clicar no botão
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 10, 187, 166),
+                            color: const Color(
+                                0xFF249689), // Cor de fundo do botão
                             borderRadius: BorderRadius.circular(32),
                           ),
                           child: Text(
                             'See detail',
                             style: GoogleFonts.outfit(
-                              color: Colors.white,
                               fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500
                             ),
                           ),
                         ),
@@ -647,14 +739,12 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-            ),
-          );
-        },
-      );
-
-    },
-  );
-}
-
-  
+            );
+          },
+        ),
+        );
+        
+      },
+    );
+  }
 }
