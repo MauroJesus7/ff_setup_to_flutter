@@ -107,7 +107,8 @@ class ApiService {
           return {
             "status": "Success",
             "userId": responseData['UserId'],
-            "fullName": responseData['FullName']
+            "fullName": responseData['FullName'],
+            "teamCode": responseData['TeamCode'],
           };
         } else {
           // Se o login não for bem-sucedido, retorna um mapa com o status e a mensagem de erro
@@ -185,29 +186,6 @@ class ApiService {
       throw Exception('Error. Status code: ${response.statusCode}');
     }
   }
-
-  // Future<List<DiseaseReport>> getUserReports() async {
-  //   final response = await http.get(
-  //     Uri.parse('$baseUrl/api/APIDiseaseReports/UserReports'),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Cookie': await getSavedCookie() ?? '',
-  //     },
-  //   );
-
-  //   print('Status Code: ${response.statusCode}');
-  //   print('Response Body: ${response.body}');
-
-  //   if (response.statusCode == 200) {
-  //     Iterable json = jsonDecode(response.body);
-  //     return List<DiseaseReport>.from(json.map((model) => DiseaseReport.fromJson(model)));
-  //   } else if (response.statusCode == 404 && response.body == "No disease reports found for current user.") {
-  //     return "No disease reports found for current user."; // Retorna a mensagem personalizada
-  //   } else {
-  //     throw Exception('Failed to load reports');
-  //   }
-
-  // }
 
   Future<ReportsResponse> getUserReports() async {
     try {

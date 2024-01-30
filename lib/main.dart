@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => HomeModel()),
         Provider(create: (context) => ApiService()),
-        // Adicione outros providers aqui, se necessário
       ],
       child: MaterialApp(
         title: 'AGRISmartPro - App',
@@ -76,7 +75,7 @@ class _NavBarAppState extends State<NavBarApp> {
     super.initState();
     _pages = <Widget>[
       const HomeWidget(),
-      DataViewScreenWidget(),//reports: _emptyReports), // Usando a lista vazia
+      const DataViewScreenWidget(),//reports: _emptyReports), // Usando a lista vazia
     ];
   }
 

@@ -1,0 +1,8 @@
+0 Tomato healthy
+1 Tomato Late blight
+2 Potato Healthy
+3 Potato Late blight
+4 Tomato Early blight
+5 Pepper bell healthy
+6 Pepper bell Bacterial spot
+7 Tomato Septoria leaf spot

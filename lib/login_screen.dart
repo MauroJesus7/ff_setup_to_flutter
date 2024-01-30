@@ -339,35 +339,43 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                 if (result['status'] == "Success") {
                                   Provider.of<HomeModel>(context, listen: false).setUserData(
                                     result['fullName'],
+                                    result['teamCode'],
                                     result['userId'].toString(),
                                   );
 
                                   // Mostrar um alerta de sucesso com o nome e ID do usuário
-                                  showDialog(
+                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text(
-                                          "Login Successfully",
-                                          style: GoogleFonts.outfit(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                        title: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.check_circle, // Ícone de sucesso
+                                              color: Colors.green, // Cor do ícone
+                                              size: 40.0, // Tamanho do ícone
+                                            ),
+                                            SizedBox(height: 10), // Espaçamento entre o ícone e o texto
+                                            Text(
+                                              "Login Successfully",
+                                              textAlign: TextAlign.center, // Centraliza o texto
+                                              style: GoogleFonts.outfit(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         content: Text(
-                                          "Welcome ${result['fullName']} to AGRISmart Pro App. Your ID is ${result['userId']}.",
+                                          "Welcome to AGRISmart Pro App, ${result['fullName']}! Your Team Code is ${result['teamCode']}.",
+                                          textAlign: TextAlign.center, // Centraliza o conteúdo
                                         ),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: Text("OK"),
+                                            child: Text("Go to home", textAlign: TextAlign.center,),
                                             onPressed: () {
-                                              // Navigator.of(context).pop();
-                                              // Navigator.of(context).pushReplacement(
-                                              //   MaterialPageRoute(
-                                              //     builder: (context) => HomeWidget(), // Substitua HomeWidget() pelo nome correto da sua página inicial
-                                              //   ),
-                                              // );
-
                                               Navigator.of(context).pushReplacement(
                                                 MaterialPageRoute(builder: (context) => NavBarApp()), // Navega para NavBarApp
                                               );
@@ -377,6 +385,8 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                       );
                                     },
                                   );
+
+
                                 } else {
                                   // Mostrar mensagem de erro com detalhes adicionais, se houver
                                   String errorMessage = 'Login failed';

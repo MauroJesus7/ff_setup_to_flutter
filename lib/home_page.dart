@@ -23,7 +23,7 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   late HomeModel _model;
   late TabController _tabController;
-  late Future<List<DiseaseReport>> _reportsFuture;
+  late Future<ReportsResponse> _reportsFuture;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -37,10 +37,15 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         setState(() {
-          _reportsFuture =
-              Provider.of<ApiService>(context, listen: false).getUserReports();
+          _reportsFuture = Provider.of<ApiService>(context, listen: false).getUserReports();
         });
       }
+    });
+  }
+
+  void reloadData() {
+    setState(() {
+      _reportsFuture = Provider.of<ApiService>(context, listen: false).getUserReports();
     });
   }
 
@@ -100,103 +105,103 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 44, 16, 12),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 40, 16, 12),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Card(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      color: const Color.fromARGB(255, 10, 187, 166),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
-                        child: ClipRRect(
+                    GestureDetector(
+                      onTap: () => reloadData(),
+                      child: Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        color: const Color.fromARGB(240, 10, 180, 160),
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40),
-                          child: Image.asset(
-                            'assets/Mauro-ProfilePhoto.jpg',
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            homeModel.fullName,
-                            style: GoogleFonts.outfit(
-                                fontSize: 20, fontWeight: FontWeight.w500),
-                          ),
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 2, 0, 0),
-                            child: Text(
-                              'Team #673241-CB',
-                              style: GoogleFonts.outfit(fontSize: 16),
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(40),
+                            child: Image.asset(
+                              'assets/Mauro-ProfilePhoto.jpg',
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(110, 0, 0, 0),
-                      child: GestureDetector(
-                        onTap: () async {
-                          // await ApiService().logout();
 
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // Programa para fechar a caixa de diálogo automaticamente após 2 segundos
-                              Future.delayed(const Duration(seconds: 2), () {
-                                if (mounted) {
-                                  // Verifica se o widget ainda está montado
-                                  Navigator.of(context)
-                                      .pop(); // Fecha a caixa de diálogo
-                                  Navigator.pushReplacementNamed(context,
-                                      '/login'); // Redireciona para a página de login
-                                }
-                              });
-
-                              return AlertDialog(
-                                title: Text(
-                                  "Logout Successful",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.outfit(fontSize: 20),
-                                ),
-                                content: const SingleChildScrollView(
-                                  child: ListBody(
-                                    children: <Widget>[
-                                      Text(
-                                        "You have been successfully logged out.",
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: const FaIcon(
-                          FontAwesomeIcons.rightFromBracket,
-                          color: Color.fromARGB(255, 243, 54, 54),
-                          size: 28,
+                    Expanded( 
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              homeModel.fullName,
+                              style: GoogleFonts.outfit(
+                                  fontSize: 20, fontWeight: FontWeight.w500),
+                            ),
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
+                              child: Text(
+                                homeModel.teamCode ?? "No associated team",
+                                style: GoogleFonts.outfit(fontSize: 16),
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        // await ApiService().logout();
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            
+                            Future.delayed(const Duration(seconds: 2), () {
+                              if (mounted) {
+                                // Verifica se o widget ainda está montado
+                                Navigator.of(context)
+                                    .pop(); // Fecha a caixa de diálogo
+                                Navigator.pushReplacementNamed(context,
+                                    '/login'); 
+                              }
+                            });
+
+                            return AlertDialog(
+                              title: Text(
+                                "Logout Successful",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.outfit(fontSize: 20),
+                              ),
+                              content: const SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    Text(
+                                      "You have been successfully logged out.",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: const FaIcon(
+                        FontAwesomeIcons.signOut,
+                        color: Color.fromARGB(255, 243, 54, 54),
+                        size: 28,
                       ),
                     ),
                   ],
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 0, 0),
                 child: Text(
@@ -565,7 +570,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         Align(
-                          alignment: const Alignment(0, 0),
+                          alignment: Alignment(0, 0,),
                           child: TabBar(
                             isScrollable: true,
                             labelColor: const Color(0xFF249689),

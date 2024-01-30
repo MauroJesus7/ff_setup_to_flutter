@@ -1,4 +1,3 @@
-
 import 'package:ff_setup_to_flutter/main.dart';
 
 import 'home_page.dart' show HomeWidget;
@@ -21,14 +20,19 @@ void main() {
 
 class HomeModel with ChangeNotifier {
   String _fullName = '';
+  String _teamCode = '';
   String _userId = '';
+  
 
   String get fullName => _fullName;
   String get userId => _userId;
+  String get teamCode => _teamCode;
 
-  setUserData(String fullName, String userId) {
+  setUserData(String fullName, String teamCode, String userId) {
     _fullName = fullName;
+    _teamCode = teamCode;
     _userId = userId;
+    
     notifyListeners();
   }
 }
