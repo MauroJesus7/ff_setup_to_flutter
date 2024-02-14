@@ -1,5 +1,9 @@
+import 'package:ff_setup_to_flutter/disease_report_details_screen.dart';
 import 'package:ff_setup_to_flutter/disease_reports_screen1.dart';
 import 'package:ff_setup_to_flutter/models/DiseaseReport.dart';
+import 'package:ff_setup_to_flutter/models/PestReport.dart';
+import 'package:ff_setup_to_flutter/pest_reports_screen.dart';
+import 'package:ff_setup_to_flutter/report_anomalies_screen.dart';
 import 'package:ff_setup_to_flutter/services/ApiService.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -58,7 +62,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   void _logout() async {
     await ApiService().logout();
 
-    if (!mounted) return; // Verifica se o widget ainda está montado
+    if (!mounted) return;
 
     showDialog(
       context: context,
@@ -327,7 +331,14 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                             focusColor: Colors.transparent,
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
-                            onTap: () async {},
+                            onTap: () async {
+                              Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ReportAnomaliesScreenWidget(),
+                              ),
+                            );
+                            },
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -403,7 +414,14 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                             focusColor: Colors.transparent,
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
-                            onTap: () async {},
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ReportPetsScreenWidget(),
+                                ),
+                              );
+                            },
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -547,7 +565,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                 child: Container(
-                  width: double.infinity,
+                  width: MediaQuery.of(context).size.width,
                   height: 400,
                   decoration: BoxDecoration(
                     color: Colors.blueGrey[50],
@@ -566,67 +584,95 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 3, 0, 0),
                     child: Column(
                       children: [
                         Align(
-                          alignment: Alignment(0, 0,),
-                          child: TabBar(
-                            isScrollable: true,
-                            labelColor: const Color(0xFF249689),
-                            unselectedLabelColor: Colors.black,
-                            unselectedLabelStyle: TextStyle(),
-                            indicatorColor: const Color(0xFF249689),
-                            indicatorWeight: 2,
-                            tabs: [
-                              Tab(
-                                child: Text(
-                                  "Diseases",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 18,
+                          alignment: const Alignment(0, 0,),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width,
+                              child: TabBar(
+                              isScrollable: false,                            
+                              labelColor: const Color(0xFF249689),
+                              unselectedLabelColor: Colors.black,
+                              unselectedLabelStyle: TextStyle(),
+                              indicatorColor: const Color(0xFF249689),
+                              indicatorWeight: 2,
+                              tabs: [
+                                Tab(
+                                  child: Text(
+                                    "Diseases",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Tab(
-                                child: Text(
-                                  "Anomalies",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 18,
+                                Tab(
+                                  child: Text(
+                                    "Anomalies",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Tab(
-                                child: Text(
-                                  "Pests",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 18,
+                                Tab(
+                                  child: Text(
+                                    "Pests",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Tab(
-                                child: Text(
-                                  "Suggestions",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 18,
+                                Tab(
+                                  child: Text(
+                                    "Suggestions",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                            controller: _tabController,
+                              ],
+                              controller: _tabController,
+                            ),
                           ),
                         ),
                         Expanded(
                           child: TabBarView(
                             controller: _tabController,
                             children: [
-                              buildDiseaseReportsTab(
-                                  context), // Aba de relatórios de doenças
-                              Container(), // Substitua por conteúdo real para as outras abas
-                              Container(), // Substitua por conteúdo real para as outras abas
-                              Container(), // Substitua por conteúdo real para as outras abas
+                              buildDiseaseReportsTab(context), // Aba de relatórios de doenças
+                              const Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min, 
+                                  children: [
+                                    Icon(Icons.info_outline, size: 50, color: Colors.grey),
+                                    Text(
+                                      "No reports associated with this tab at the moment.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              buildPestReportsTab(context), // Aba de relatórios de pragas
+                              const Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.info_outline, size: 50, color: Colors.grey),
+                                    Text(
+                                      "No reports associated with this tab at the moment.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
+
                       ],
                     ),
                   ),
@@ -673,7 +719,126 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color.fromARGB(255, 214, 212, 212), // Cor da borda
+                  color: const Color.fromARGB(255, 214, 212, 212), // Cor da borda
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white
+              ),              
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,                  
+                  children: [
+                    Text(
+                      report.code,
+                      style: GoogleFonts.outfit(
+                        fontSize: 21,
+                        fontWeight: FontWeight.w500
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                      child: Text(
+                        report.description,
+                        style: GoogleFonts.outfit(
+                        fontSize: 17,
+                        color: const Color.fromARGB(255, 114, 113, 113),
+                        fontWeight: FontWeight.w500
+                      ),
+                      ),
+                    ),
+                    const Divider(
+                      height: 22,
+                      thickness: 1,
+                      color: Color.fromARGB(255, 195, 193, 193),
+                    ),
+                    Text(
+                      "$formattedDate",
+                      style: GoogleFonts.outfit(
+                        fontSize: 16,
+                        color: const Color(0xFF249689),
+                        fontWeight: FontWeight.w500
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DiseaseReportDetailWidget(report: report),
+                              ),
+                            );
+                          },
+
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: const Color(
+                                0xFF249689), // Cor de fundo do botão
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                          child: Text(
+                            'See detail',
+                            style: GoogleFonts.outfit(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+        );
+        
+      },
+    );
+  }
+
+  Widget buildPestReportsTab(BuildContext context) {
+    return FutureBuilder<PestReportsResponse>(
+      future: Provider.of<ApiService>(context, listen: false).getUserPestReports(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          print('Error loading reports: ${snapshot.error}');
+          return Center(child: Text("Error: ${snapshot.error.toString()}"));
+        }
+
+        List<PestReport>? reports = snapshot.data?.pestReports;
+        if (reports == null || reports.isEmpty) {
+          return const Center(
+              child: Text("No pest reports found for current user."));
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(9.0),
+          child: ListView.builder(
+          itemCount: reports.length,
+          itemBuilder: (context, index) {
+            PestReport report = reports[index];
+
+            // Formatando a data
+            String formattedDate = DateFormat('EEE, MMM d, yyyy - h:mm a')
+                .format(report.createdAt);
+
+            return Container(              
+              width: 20,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color.fromARGB(255, 214, 212, 212), // Cor da borda
                   width: 2,
                 ),
                 borderRadius: BorderRadius.circular(12),
@@ -752,4 +917,5 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       },
     );
   }
+
 }

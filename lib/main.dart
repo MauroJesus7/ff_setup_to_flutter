@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         home: const LoginScreenWidget(),
         // Mapa de rotas
         routes: {
-          '/login': (context) => const LoginScreenWidget(), // Substitua LoginScreenWidget pelo widget correto para a tela de login
+          '/login': (context) => const LoginScreenWidget(), 
           // Adicione outras rotas aqui
         },
         debugShowCheckedModeBanner: false,

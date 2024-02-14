@@ -83,15 +83,6 @@ class _DataViewScreenWidgetState extends State<DataViewScreenWidget> {
     }).toSet();
   }
 
-  Map<String, int> _getReportCounts(List<DiseaseReport> reports) {
-    Map<String, int> counts = {};
-    for (var report in reports) {
-      counts[report.description] = (counts[report.description] ?? 0) + 1;
-    }
-    return counts;
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,37 +147,144 @@ class _DataViewScreenWidgetState extends State<DataViewScreenWidget> {
                         ),
                       ),
                     ),
-                    Expanded(
-                      flex: 1, // Ajuste conforme necessário
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: _buildChart(reports), // Certifique-se de que esta função está implementada
-                      ),
+                    
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(9.0), // Adicione o espaçamento desejado
+                            child: Container(
+                              width: double.infinity,
+                              height: 100,
+                              constraints: BoxConstraints(
+                                maxWidth: 370,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.black12,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [                
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Reports Completed',
+                                            style: GoogleFonts.outfit(
+                                                  fontSize: 16
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                '255',
+                                                style: GoogleFonts.outfit(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.arrow_upward_rounded,
+                                                color: Color.fromARGB(255, 10, 187, 166), // Cor do ícone
+                                                size: 20,
+                                              ),                         
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0), // Adicione o espaçamento desejado
+                            child: Container(
+                              width: double.infinity,
+                              height: 100,
+                              constraints: const BoxConstraints(
+                                maxWidth: 370,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white, // Cor de fundo
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.black12, // Cor da borda
+                                  width: 1,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [                
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Upcoming Tasks',
+                                            style: GoogleFonts.outfit(
+                                                  fontSize: 16
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                '67',
+                                                style: GoogleFonts.outfit(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.arrow_upward_rounded,
+                                                color: Color.fromARGB(255, 10, 187, 166), // Cor do ícone
+                                                size: 20,
+                                              ),
+                                              
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
+                    
                   ],
                 );
               },
             ),
           ),
-
         ],
       ),
-    );
-  }
-
-  Widget _buildChart(List<DiseaseReport> reports) {
-    var counts = _getReportCounts(reports);
-    List<PieChartSectionData> sections = counts.entries.map((entry) {
-      return PieChartSectionData(
-        color: Colors.blue, // Você pode querer usar cores diferentes para cada seção
-        value: entry.value.toDouble(),
-        title: '${entry.value}', // Ou pode formatar isso de forma mais sofisticada
-        radius: 50,
-      );
-    }).toList();
-
-    return PieChart(
-      PieChartData(sections: sections),
     );
   }
 

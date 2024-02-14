@@ -580,6 +580,7 @@ Widget _buildPredictionText() {
             ),
           ),
           Text(
+            //'Precision: ${( _predictions[0]['confidence'])}',
             'Precision: ${( _predictions[0]['confidence'] * 100).toStringAsFixed(0)}%',
             style: GoogleFonts.outfit(
               fontSize: 16,

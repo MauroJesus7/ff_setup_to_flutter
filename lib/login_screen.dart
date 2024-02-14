@@ -165,18 +165,16 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Email Address',
-                                  labelStyle: const TextStyle(
-                                    fontFamily: 'Outfit',
-                                    color: Color(0xFF57636C),
-                                    fontSize: 18,
+                                  labelStyle: GoogleFonts.outfit(
+                                    fontSize: 20,
                                     fontWeight: FontWeight.normal,
+                                    color: const Color(0xFF57636C),
                                   ),
                                   hintText: 'Enter your email here...',
-                                  hintStyle: const TextStyle(
-                                    fontFamily: 'Outfit',
-                                    color: Color(0xFF57636C),
-                                    fontSize: 14,
+                                  hintStyle: GoogleFonts.outfit(
+                                    fontSize: 16,
                                     fontWeight: FontWeight.normal,
+                                    color: const Color(0xFF57636C),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
@@ -193,14 +191,14 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                       color: Colors.red, // Alterado para vermelho
                                       width: 2,
                                     ),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                       color: Colors.red, // Alterado para vermelho
                                       width: 2,
                                     ),
@@ -211,11 +209,10 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                   contentPadding: const EdgeInsetsDirectional.fromSTEB(
                                     16, 24, 0, 24),
                                   ),
-                                  style: const TextStyle(
-                                    fontFamily: 'Outfit',
-                                    color: Color(0xFF0F1113),
+                                  style: GoogleFonts.outfit(
                                     fontSize: 20,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
                                   ),
                                   maxLines: null,
                                 ),
@@ -237,18 +234,15 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                 obscureText: !_passwordVisible,
                                 decoration: InputDecoration(
                                   labelText: 'Password',
-                                  labelStyle: const TextStyle(
-                                    fontFamily: 'Outfit',
-                                    color: Color(0xFF57636C),
-                                    fontSize: 18,
+                                  labelStyle: GoogleFonts.outfit(
+                                    fontSize: 20,
                                     fontWeight: FontWeight.normal,
+                                    color: const Color.fromARGB(255, 99, 98, 98)
                                   ),
                                   hintText: 'Enter your password here...',
-                                  hintStyle: const TextStyle(
-                                    fontFamily: 'Outfit',
-                                    color: Color(0xFF57636C),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
+                                  hintStyle: GoogleFonts.outfit(
+                                    fontSize: 16,
+                                    color: const Color(0xFF57636C),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
@@ -317,18 +311,23 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                             TextButton(
                                 style: TextButton.styleFrom(
                               textStyle: const TextStyle(fontSize: 16,),
-                              foregroundColor: Color.fromARGB(255, 23, 23, 23),
+                              foregroundColor: const Color.fromARGB(255, 23, 23, 23),
                             ),
                               onPressed: () {},
-                            child:  const Text('Forgot Password?'),
+                            child:  Text('Forgot Password?',
+                              style: GoogleFonts.outfit(
+                                fontSize: 18
+                              ),
+                            ),
                             ),                              
                             ElevatedButton(
                               style: 
                               ElevatedButton.styleFrom(
-                                minimumSize: const Size(130, 40),
-                                backgroundColor: Colors.teal
-                              ),
-                              
+                                minimumSize: const Size(140, 50),
+                                backgroundColor: const Color(
+                                0xFF249689),
+                                
+                              ),                             
                               
                               onPressed: () async {
                                 String email = emailController.text;
@@ -386,23 +385,56 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                     },
                                   );
 
-
                                 } else {
                                   // Mostrar mensagem de erro com detalhes adicionais, se houver
                                   String errorMessage = 'Login failed';
 
                                   if (result['status'] == "Error") {
                                     errorMessage = result['message'];
-                                  }                                  
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(errorMessage)),
-                                  );
+
+                                    if (errorMessage.contains("not assigned to any team")) {
+                                      // Mostra uma caixa de diálogo para o caso específico do TeamCode null
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Icon(
+                                              Icons.error_outline, // Ícone de erro
+                                              color: Colors.red, // Cor do ícone
+                                              size: 40.0, // Tamanho do ícone
+                                            ),
+                                            content: Text(
+                                              errorMessage,
+                                              textAlign: TextAlign.center, // Centraliza o conteúdo
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text("Contact Admin"),
+                                                onPressed: () {                                                  
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      // Mostra uma SnackBar para outros erros
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(errorMessage)),
+                                      );
+                                    }
+                                  }
+
                                 }
-                              },                              
+                              },                            
                                                                 
-                              child: const Text('Login',
-                              style: TextStyle(fontSize: 18,
-                              color: Colors.white),
+                              child: Text('Login',
+                              style: GoogleFonts.outfit(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white
+                              ),
                               ),
                             ),
                           ],

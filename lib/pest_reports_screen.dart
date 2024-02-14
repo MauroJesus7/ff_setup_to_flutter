@@ -1,6 +1,6 @@
 import 'package:ff_setup_to_flutter/home_page.dart';
 import 'package:ff_setup_to_flutter/main.dart';
-import 'package:ff_setup_to_flutter/models/DiseaseReport.dart';
+import 'package:ff_setup_to_flutter/models/PestReport.dart';
 import 'package:ff_setup_to_flutter/services/ApiService.dart';
 import 'package:styled_divider/styled_divider.dart';
 import 'package:flutter/material.dart';
@@ -14,26 +14,26 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class ManualReportDiseasesScreenWidget extends StatefulWidget {
-  const ManualReportDiseasesScreenWidget({super.key});
+class ReportPetsScreenWidget extends StatefulWidget {
+  const ReportPetsScreenWidget({super.key});
 
   @override
-  State<ManualReportDiseasesScreenWidget> createState() =>
-      _ManualReportDiseasesScreenWidgetState();
+  State<ReportPetsScreenWidget> createState() =>
+      _ReportPetsScreenWidgetState();
 }
 
-class _ManualReportDiseasesScreenWidgetState
-    extends State<ManualReportDiseasesScreenWidget> {
+class _ReportPetsScreenWidgetState
+    extends State<ReportPetsScreenWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<dynamic> crops = [];
-  List<dynamic> diseases = [];
+  List<dynamic> pests = [];
 
   TextEditingController codeController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
   String? selectedCrop;
-  String? selectedDisease;
+  String? selectedPest;
   double? latitude;
   double? longitude;
   bool isReportPrivate = false;
@@ -75,7 +75,7 @@ class _ManualReportDiseasesScreenWidgetState
 
     _determinePosition();
   }
-
+  
   Future<Position?> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -109,8 +109,8 @@ class _ManualReportDiseasesScreenWidgetState
       return null;
     }
   }
-  
-  Future<Map<String, dynamic>> createAndSendDiseaseReport(File? imageFile) async {
+
+  Future<Map<String, dynamic>> createAndSendPestReport(File? imageFile) async {
     Position? position = await _determinePosition();
 
     if (position == null) {
@@ -123,8 +123,8 @@ class _ManualReportDiseasesScreenWidgetState
         orElse: () => null,
       )?['Id'];
 
-      final selectedDiseaseId = diseases.firstWhere(
-        (disease) => disease['Name'] == selectedDisease,
+      final selectedPestId = pests.firstWhere(
+        (pest) => pest['Name'] == selectedPest,
         orElse: () => null,
       )?['Id'];
 
@@ -132,8 +132,8 @@ class _ManualReportDiseasesScreenWidgetState
         return {"success": false, "message": "No image selected."};
       }
 
-      if (selectedCropId != null && selectedDiseaseId != null) {
-        var report = DiseaseReport(
+      if (selectedCropId != null && selectedPestId != null) {
+        var report = PestReport(
           code: codeController.text,
           description: descriptionController.text,
           photoPath: null,
@@ -141,29 +141,29 @@ class _ManualReportDiseasesScreenWidgetState
           latitude: position.latitude.toString(),
           longitude: position.longitude.toString(),
           cropId: selectedCropId,
-          diseaseId: selectedDiseaseId,
+          pestId: selectedPestId,
           isPrivate: isReportPrivate,
           createdAt: DateTime.now(),
         );
 
         // Chamada ao serviço de API ajustada para passar a imagem como arquivo
-        await ApiService().createDiseaseReport(report, _image);
+        await ApiService().createPestReport(report, _image);
 
         // Limpa os controladores e reseta variáveis
         codeController.clear();
         descriptionController.clear();
-        _image = null;
+        _image = null; // Limpa a imagem selecionada
 
         // Atualiza a UI
         setState(() {
           selectedCrop = null;
-          selectedDisease = null;
+          selectedPest = null;
           isReportPrivate = false;
         });
 
         return {"success": true, "message": "Report created successfully!"};
       } else {
-        return {"success": false, "message": "Unselected crop or disease."};
+        return {"success": false, "message": "Unselected crop or pest."};
       }
     } catch (e) {
       print("Error creating or sending the report: $e");
@@ -184,11 +184,11 @@ class _ManualReportDiseasesScreenWidgetState
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Icon(
-                Icons.check_circle,
-                color: Colors.green,
-                size: 40.0,
+                Icons.check_circle, // Ícone de sucesso
+                color: Colors.green, // Cor do ícone
+                size: 40.0, // Tamanho do ícone
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 10), // Espaçamento entre o ícone e o texto
               Text(
                 "Success", // Mensagem de sucesso
                 textAlign: TextAlign.center, // Centraliza o texto
@@ -200,8 +200,8 @@ class _ManualReportDiseasesScreenWidgetState
             ],
           ),
           content: Text(
-            message,
-            textAlign: TextAlign.center, 
+            message, // Mensagem de sucesso específica
+            textAlign: TextAlign.center, // Centraliza o conteúdo
           ),
           actions: <Widget>[
             TextButton(
@@ -210,7 +210,7 @@ class _ManualReportDiseasesScreenWidgetState
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context); // Fecha o AlertDialog
               },
             ),
             TextButton(
@@ -219,10 +219,10 @@ class _ManualReportDiseasesScreenWidgetState
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const NavBarApp()),
+                Navigator.of(context).
+                pushReplacement(
+                    MaterialPageRoute(builder: (context) 
+                    => NavBarApp()),
                 );
               },
             ),
@@ -253,6 +253,11 @@ class _ManualReportDiseasesScreenWidgetState
   //   setState(() {
   //     _image = null;
   //   });
+  // }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
   // }
 
   Future<void> _pickImage() async {
@@ -286,7 +291,7 @@ class _ManualReportDiseasesScreenWidgetState
                   ),
                 ),
                 onTap: () async {
-                  Navigator.of(context).pop(); // Fecha o bottom sheet
+                  Navigator.of(context).pop();
                   final XFile? pickedImage = await picker.pickImage(
                     source: ImageSource.camera,
                   );
@@ -374,7 +379,7 @@ class _ManualReportDiseasesScreenWidgetState
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Create Report',
+                    'Create New Report',
                     style: GoogleFonts.outfit(
                       fontSize: 30,
                       fontWeight: FontWeight.w500,
@@ -383,7 +388,7 @@ class _ManualReportDiseasesScreenWidgetState
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                     child: Text(
-                      'Create a manual report choosing options',
+                      'Create a pest report choosing options',
                       style: GoogleFonts.outfit(
                         fontSize: 18,
                         fontWeight: FontWeight.normal,
@@ -462,25 +467,19 @@ class _ManualReportDiseasesScreenWidgetState
                                       selectedCrop = newValue;
                                     });
                                     try {
-                                      // Encontrar o ID da cultura com base no nome selecionado
-                                      final selectedCropId = crops.firstWhere(
-                                        (crop) => crop['Name'] == newValue,
-                                        orElse: () => null,
-                                      )?['Id'];
-
-                                      if (selectedCropId != null) {
-                                        final diseasesData = await ApiService.getDiseasesByCrop(selectedCropId);
-                                        setState(() {
-                                          diseases = diseasesData;
-                                          selectedDisease = null; // Reset a doença selecionada
-                                        });
-                                      }
+                                      final cropId = crops.firstWhere((crop) => crop['Name'] == newValue)['Id'];
+                                      pests = await ApiService.getPestsByCrop(cropId);
+                                      setState(() {
+                                        selectedPest = null; // Reset a praga selecionada quando a cultura muda
+                                      });
                                     } catch (e) {
-                                      print('Erro ao carregar doenças: $e');
+                                      // Tratar erro ao carregar doenças
+                                      print('Erro ao carregar as pestes: $e');
                                     }
                                   }
                                 },
-                                items: crops.map<DropdownMenuItem<String>>((dynamic crop) {
+                                items: crops.map<DropdownMenuItem<String>>(
+                                    (dynamic crop) {
                                   return DropdownMenuItem<String>(
                                     value: crop['Name'],
                                     child: Text(crop['Name']),
@@ -491,14 +490,17 @@ class _ManualReportDiseasesScreenWidgetState
                                 underline: Container(
                                   height: 2,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(255, 0, 0, 0), width: 4),
+                                    border: Border.all(
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0),
+                                        width: 4),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                style: GoogleFonts.outfit(fontSize: 18, color: Colors.black),
+                                style: GoogleFonts.outfit(
+                                    fontSize: 18, color: Colors.black),
                                 dropdownColor: Colors.white,
                               ),
-
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 20),
@@ -513,22 +515,20 @@ class _ManualReportDiseasesScreenWidgetState
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 16.0),
                               child: DropdownButton<String>(
-                                value: selectedDisease,
+                                value: selectedPest,
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    selectedDisease = newValue;
+                                    selectedPest = newValue;
                                   });
                                 },
-                                items: diseases.map<DropdownMenuItem<String>>(
-                                    (dynamic disease) {
+                                items: pests.map<DropdownMenuItem<String>>(
+                                    (dynamic pest) {
                                   return DropdownMenuItem<String>(
-                                    value: disease[
-                                        'Name'], // Ajuste conforme a sua API
-                                    child: Text(disease[
-                                        'Name']), // Ajuste conforme a sua API
+                                    value: pest['Name'],
+                                    child: Text(pest['Name']), 
                                   );
                                 }).toList(),
-                                hint: const Text('Choose a disease...'),
+                                hint: const Text('Choose a pest...'),
                                 icon: const Icon(
                                   Icons.keyboard_arrow_down_rounded,
                                   color: Colors.grey,
@@ -697,7 +697,7 @@ class _ManualReportDiseasesScreenWidgetState
                               child: ElevatedButton.icon(
                                 onPressed: () async {
                                   if (_image != null) {
-                                    var result = await createAndSendDiseaseReport(_image);
+                                    var result = await createAndSendPestReport(_image);
                                     if (result['success']) {
                                       _showSuccessDialog(context, result['message']);
                                     } else {
