@@ -10,9 +10,7 @@ import 'dart:convert';
 import 'dart:io';
 
 class ApiService {
-  // final String baseUrl = "https://10.0.2.2:44384";
   static const String baseUrl = "https://10.0.2.2:44384";
-  //static const String baseUrl = "http://192.168.1.75:56441";
   //static const String baseUrl = "https://192.168.1.75:44384";
 
   Future<Map<String, dynamic>> login(String email, String password) async {

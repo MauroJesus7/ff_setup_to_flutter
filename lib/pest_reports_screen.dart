@@ -145,8 +145,7 @@ class _ReportPetsScreenWidgetState
           isPrivate: isReportPrivate,
           createdAt: DateTime.now(),
         );
-
-        // Chamada ao serviço de API ajustada para passar a imagem como arquivo
+        
         await ApiService().createPestReport(report, _image);
 
         // Limpa os controladores e reseta variáveis
@@ -210,7 +209,7 @@ class _ReportPetsScreenWidgetState
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
-                Navigator.pop(context); // Fecha o AlertDialog
+                Navigator.pop(context);
               },
             ),
             TextButton(
@@ -222,7 +221,7 @@ class _ReportPetsScreenWidgetState
                 Navigator.of(context).
                 pushReplacement(
                     MaterialPageRoute(builder: (context) 
-                    => NavBarApp()),
+                    => const NavBarApp()),
                 );
               },
             ),
@@ -233,29 +232,6 @@ class _ReportPetsScreenWidgetState
   }
 
   File? _image;
-
-  // Future<void> _pickImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedImage = await picker.pickImage(
-  //       source: ImageSource
-  //           .gallery); // Pode usar ImageSource.camera para tirar uma foto
-
-  //   setState(() {
-  //     if (pickedImage != null) {
-  //       _image = File(pickedImage.path);
-  //     } else {
-  //       print('No images selected.');
-  //     }
-  //   });
-  // }
-
-  // void _removeImage() {
-  //   setState(() {
-  //     _image = null;
-  //   });
-  // }
-
-  // @override
   // void dispose() {
   //   super.dispose();
   // }

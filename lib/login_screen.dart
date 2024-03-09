@@ -52,13 +52,13 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
     return GestureDetector(      
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF1F4F8),
+        backgroundColor: const Color(0xFFF1F4F8),
         body: Container(
           width: MediaQuery.sizeOf(context).width,
           height: MediaQuery.sizeOf(context).height * 1,
-          decoration: BoxDecoration(),
+          decoration: const BoxDecoration(),
           child: Align(
-            alignment: AlignmentDirectional(0.00, 1.00),
+            alignment: const AlignmentDirectional(0.00, 1.00),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,

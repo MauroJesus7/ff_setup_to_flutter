@@ -1,5 +1,5 @@
-
 import 'package:ff_setup_to_flutter/disease_manual_reports_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:styled_divider/styled_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,17 +8,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite_v2/tflite_v2.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 
 class ReportDiseasesScreen1Widget extends StatefulWidget {
   const ReportDiseasesScreen1Widget({super.key});
 
   @override
-  State<ReportDiseasesScreen1Widget> createState() => _ReportDiseasesScreen1WidgetState();
+  State<ReportDiseasesScreen1Widget> createState() =>
+      _ReportDiseasesScreen1WidgetState();
 }
 
-class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widget> {
- 
+class _ReportDiseasesScreen1WidgetState
+    extends State<ReportDiseasesScreen1Widget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String? selectedCrop;
@@ -47,19 +49,22 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
 
   Future detect_image(File image) async {
     var prediction = await Tflite.runModelOnImage(
-      path: image.path,
-      numResults: 6,
-      threshold: 0.5,
-      imageMean: 127.5,
-      imageStd: 127.5,
-      asynch: true
-    );
+        path: image.path,
+        numResults: 6,
+        threshold: 0.5,
+        imageMean: 127.5,
+        imageStd: 127.5,
+        asynch: true);
 
     setState(() {
       _loading = false;
       if (prediction != null) {
         _predictions = prediction;
-        if (selectedCrop != null && !_predictions[0]['label'].toString().toLowerCase().contains(selectedCrop!.toLowerCase())) {
+        if (selectedCrop != null &&
+            !_predictions[0]['label']
+                .toString()
+                .toLowerCase()
+                .contains(selectedCrop!.toLowerCase())) {
           // Se a doença detectada não corresponder à crop selecionada
           _predictions = []; // Limpa as previsões
           showDialog(
@@ -82,7 +87,7 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop(); // Fecha o diálogo
+                      Navigator.of(context).pop();
                     },
                     child: Text(
                       "OK",
@@ -119,14 +124,20 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
   }
 
   @override
-  void dispose() { 
+  void dispose() {
     Tflite.close();
     super.dispose();
   }
 
+  Future<void> _launchUrl(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $urlString';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    
     return GestureDetector(
       child: Scaffold(
         key: scaffoldKey,
@@ -152,7 +163,8 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 15, 0),
               child: GestureDetector(
-                onTap: clearCropSelection,  // Chama clearCropSelection quando a foto do perfil é clicada
+                onTap:
+                    clearCropSelection,
                 child: Container(
                   margin: const EdgeInsets.only(right: 10),
                   width: 40,
@@ -168,7 +180,6 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                 ),
               ),
             ),
-
           ],
           centerTitle: false,
           elevation: 0,
@@ -182,7 +193,6 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-
                   Text(
                     'Create Report',
                     style: GoogleFonts.outfit(
@@ -200,91 +210,92 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                              blurRadius: 4,
-                              color: Color(0x33000000),
-                              offset: Offset(2, 2,),
+                            blurRadius: 4,
+                            color: Color(0x33000000),
+                            offset: Offset(
+                              2,
+                              2,
+                            ),
                           ),
                         ],
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
                                 mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.asset(
-                                        'assets/plant-scan.jpg',
-                                        width: 60,
-                                        height: 60,
-                                        fit: BoxFit.cover,
-                                      ),
-                                  ),
-                                  Text(
-                                      'Take a picture',
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                  ),
-                                ]
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.asset(
-                                        'assets/leaf-diagnostic.png',
-                                        width: 60,
-                                        height: 60,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Get disease result',
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                  ),
-                                  ]
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.asset(
-                                        'assets/map-icon-png-free-3.png',
-                                        width: 60,
-                                        height: 60,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Get Geolocalization',
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                  ),
-                                  ]
-                              ),
-                            ]
-                          ),
-                        ]
-                      ),
+                                  Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.asset(
+                                            'assets/plant-scan.jpg',
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Take a picture',
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ]),
+                                  Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.asset(
+                                            'assets/leaf-diagnostic.png',
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Get disease result',
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ]),
+                                  Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.asset(
+                                            'assets/map-icon-png-free-3.png',
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Get Geolocalization',
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ]),
+                                ]),
+                          ]),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                     child: Text(
@@ -294,11 +305,9 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                  ),                  
-
-                _buildCropSelection(),
-                if (selectedCrop != null) ...[                
-
+                  ),
+                  _buildCropSelection(),
+                  if (selectedCrop != null) ...[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 24, 0, 12),
                       child: SizedBox(
@@ -317,7 +326,8 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 10, 187, 166),
+                            backgroundColor:
+                                const Color.fromARGB(255, 10, 187, 166),
                             foregroundColor: Colors.white,
                             elevation: 4,
                             minimumSize: Size(double.infinity, 50),
@@ -329,8 +339,6 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                         ),
                       ),
                     ),
-
-
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                       child: Row(
@@ -340,14 +348,13 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                           Text(
                             '- OR -',
                             style: GoogleFonts.outfit(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.normal,
-                                ),
+                              fontSize: 25,
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
                         ],
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 12),
                       child: SizedBox(
@@ -366,7 +373,8 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 10, 187, 166),
+                            backgroundColor:
+                                const Color.fromARGB(255, 10, 187, 166),
                             foregroundColor: Colors.white,
                             elevation: 4,
                             minimumSize: Size(double.infinity, 50),
@@ -378,72 +386,97 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                         ),
                       ),
                     ),
-
-
                     _loading == false && _image != null
-                      ? Container(
-                          child: Column(
-                            children: [
-                              Image.file(_image!),
-                              _buildPredictionText(),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      // Implemente a ação para "Reportar"
-                                    },
-                                    icon: const Icon(Icons.add),
-                                    label: Text(
-                                      'Save',
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
+                        ? Container(
+                            child: Column(
+                              children: [
+                                Image.file(_image!),
+                                _buildPredictionText(),
+                                SizedBox(height: 20),
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                  children: [                                    
+                                    Container(
+                                    margin: EdgeInsets.only(bottom: 10.0),                                
+                                      child:SizedBox(
+                                        width: 170,
+                                        height: 40, 
+                                        child: ElevatedButton.icon(
+                                          onPressed: () async {
+                                          if (_predictions.isNotEmpty && _predictions[0]['label'] != null) {
+                                            String diseaseName = _predictions[0]['label']
+                                                .toString()
+                                                .substring(_predictions[0]['label'].toString().indexOf(' ') + 1);
+                                            String googleSearchUrl = "https://www.google.com/search?q=$diseaseName";
+                                            try {
+                                              await _launchUrl(googleSearchUrl);
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text('Could not open the browser to search for $diseaseName'),
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        },
+                                          icon: const Icon(Icons.search),
+                                          label: Text(
+                                            'Check Details',
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color.fromARGB(255, 10, 187, 166),
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color.fromARGB(255, 10, 187, 166),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
+                                 SizedBox(
+                                      width: 170,
+                                      height: 50, 
+                                      child:ElevatedButton.icon(
+                                        onPressed: () {
+                                          setState(() {
+                                            _loading = true;
+                                            _image = null;
+                                            _predictions = [];
+                                          });
+                                        },
+                                        icon: const Icon(Icons.cancel),
+                                        label: Text(
+                                          'Cancelar',
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 15),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      setState(() {
-                                        _loading = true;
-                                        _image = null;
-                                        _predictions = [];
-                                      });
-                                    },
-                                    icon: const Icon(Icons.cancel),
-                                    label: Text(
-                                      'Cancelar',
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                      : Container(),                                   
-                    ],                    
-
+                                  
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        : Container(),
+                  ],
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: const SizedBox(
@@ -454,8 +487,7 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                         lineStyle: DividerLineStyle.dashed,
                       ),
                     ),
-                  ),   
-
+                  ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -467,92 +499,92 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
                             Text(
                               'Click the button below to report your task',
                               style: GoogleFonts.outfit(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal,
-                                    ),
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal,
+                              ),
                             ),
                           ],
                         ),
                       ),
-
-                    Container(
-                      width: 280,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 30),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const ManualReportDiseasesScreenWidget(),
+                      Container(
+                        width: 280,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20, bottom: 30),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ManualReportDiseasesScreenWidget(),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 22),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 182, 124, 7),
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 22),
-                            backgroundColor: const Color.fromARGB(255, 182, 124, 7),
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
                             ),
-                          ),
-                          child:  Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.checklist,
-                                color: Colors.white,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Create Report',
-                                style: GoogleFonts.outfit(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.checklist,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Create Report',
+                                  style: GoogleFonts.outfit(
                                       fontSize: 17,
                                       fontWeight: FontWeight.normal,
-                                      color: Colors.white
+                                      color: Colors.white),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    )
-
+                      )
                     ],
                   ),
-
-              ],
+                ],
               ),
             ),
           ),
         ),
       ),
     );
-
   }
 
   Widget _buildCropOption(String crop, String assetName) {
-  bool isSelected = selectedCrop == crop; // Verifica se a crop está selecionada
+    bool isSelected =
+        selectedCrop == crop; // Verifica se a crop está selecionada
 
     return InkWell(
       onTap: () => setState(() => selectedCrop = crop),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(assetName, width: 60, height: 60), // Substitua Icon por Image.asset
+          Image.asset(assetName,
+              width: 60, height: 60), // Substitua Icon por Image.asset
           Text(crop, style: GoogleFonts.outfit()),
           SizedBox(height: 4), // Espaçamento entre o texto e o indicador
           isSelected
-            ? Container(
-                height: 2, // Altura do traço
-                width: 60, // Largura do traço
-                color: const Color.fromARGB(255, 10, 187, 166), // Cor do traço
-              )
-            : Container(), // Se não estiver selecionado, não mostra nada
+              ? Container(
+                  height: 2, // Altura do traço
+                  width: 60, // Largura do traço
+                  color:
+                      const Color.fromARGB(255, 10, 187, 166), // Cor do traço
+                )
+              : Container(), // Se não estiver selecionado, não mostra nada
         ],
       ),
     );
   }
-
 
   Widget _buildCropSelection() {
     return Padding(
@@ -568,8 +600,10 @@ class _ReportDiseasesScreen1WidgetState extends State<ReportDiseasesScreen1Widge
     );
   }
 
-Widget _buildPredictionText() {
-    if (_predictions.isNotEmpty && _predictions[0]['label'] != null && _predictions[0]['confidence'] != null) {
+  Widget _buildPredictionText() {
+    if (_predictions.isNotEmpty &&
+        _predictions[0]['label'] != null &&
+        _predictions[0]['confidence'] != null) {
       return Column(
         children: [
           Text(
@@ -581,11 +615,9 @@ Widget _buildPredictionText() {
           ),
           Text(
             //'Precision: ${( _predictions[0]['confidence'])}',
-            'Precision: ${( _predictions[0]['confidence'] * 100).toStringAsFixed(0)}%',
-            style: GoogleFonts.outfit(
-              fontSize: 16,
-              fontWeight: FontWeight.w500
-            ),
+            'Precision: ${(_predictions[0]['confidence'] * 100).toStringAsFixed(0)}%',
+            style:
+                GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ],
       );
@@ -601,14 +633,11 @@ Widget _buildPredictionText() {
           ),
           Text(
             'Precision: N/A',
-            style: GoogleFonts.outfit(
-              fontSize: 16,
-              fontWeight: FontWeight.w500
-            ),
+            style:
+                GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ],
       );
     }
   }
-
 }

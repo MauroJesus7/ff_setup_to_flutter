@@ -75,7 +75,7 @@ class _NavBarAppState extends State<NavBarApp> {
     super.initState();
     _pages = <Widget>[
       const HomeWidget(),
-      const DataViewScreenWidget(),//reports: _emptyReports), // Usando a lista vazia
+      const DataViewScreenWidget(),
     ];
   }
 

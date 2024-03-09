@@ -626,9 +626,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                 ),
                                 Tab(
                                   child: Text(
-                                    "Suggestions",
+                                    "Suggests.",
                                     style: GoogleFonts.outfit(
-                                      fontSize: 13,
+                                      fontSize: 14,
                                     ),
                                   ),
                                 ),
