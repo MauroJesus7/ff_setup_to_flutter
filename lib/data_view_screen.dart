@@ -155,11 +155,11 @@ class _DataViewScreenWidgetState extends State<DataViewScreenWidget> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.all(9.0), // Adicione o espaçamento desejado
+                            padding: const EdgeInsets.all(9.0), // Adicione o espaçamento desejado
                             child: Container(
                               width: double.infinity,
                               height: 100,
-                              constraints: BoxConstraints(
+                              constraints: const BoxConstraints(
                                 maxWidth: 370,
                               ),
                               decoration: BoxDecoration(
@@ -171,7 +171,7 @@ class _DataViewScreenWidgetState extends State<DataViewScreenWidget> {
                                 ),
                               ),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [                
@@ -191,7 +191,7 @@ class _DataViewScreenWidgetState extends State<DataViewScreenWidget> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                '255',
+                                                '10',
                                                 style: GoogleFonts.outfit(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.bold
@@ -251,7 +251,7 @@ class _DataViewScreenWidgetState extends State<DataViewScreenWidget> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                '67',
+                                                '7',
                                                 style: GoogleFonts.outfit(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.bold

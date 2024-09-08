@@ -148,7 +148,17 @@ class _DiseaseReportDetailWidgetState extends State<DiseaseReportDetailWidget> {
                             );
                           }
                         },
-                      ),                     
+                      ),         
+                      const SizedBox(height: 16),
+                      Text(
+                        'Latitude: ${widget.report.latitude}',
+                        style: GoogleFonts.outfit(fontSize: 18),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Longitude: ${widget.report.longitude}',
+                        style: GoogleFonts.outfit(fontSize: 18),
+                      ),            
                       // Adicione mais detalhes do relatório conforme necessário
                     ],
                   ),
